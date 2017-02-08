@@ -15,7 +15,6 @@
 	<link rel="icon" href="../assets/qef.png">
 	<link rel="icon" href="../assets/favicon.ico">
 	<link href="https://fonts.googleapis.com/css?family=Comfortaa:400,700&amp;subset=cyrillic" rel="stylesheet">
-	<script src="https://use.fontawesome.com/0063f48ece.js"></script>
 	<script type="text/javascript" src="/js/common.js"></script>
 </head>
 <body>
@@ -45,17 +44,10 @@
 					<h1>Help Page</h1>
 					<br>
 
-					<input type="search" id="mySearch">
-					<button onclick="myFunction()" type="button" class="btn btn-sm button">search</button>
-					<p id="search"></p>
-					<br>
-
-					<script>
-						function myFunction() {
-							var x = document.getElementById("mySearch").placeholder;
-							document.getElementById("search").innerHTML = x;
-						}
-					</script>
+					<!--<hr>
+					<h6>Search:</h6>
+					<input type="text" id="searchText"/>
+					<hr>-->
 
 					<p>Hello and welcom to the Eng Soc Forum Help page, here are awnsers to many many commonly asked qustions, as well direct you to resources that will help you if you cannnot find an awsner here.</p>
 
@@ -68,41 +60,73 @@
 					<p>These are the basics to the website, more details on the website can be seen below.</p>
 					<br>
 
-					<h4><font color = "purple">Who is this website available too?</font></h4>
-					<p>In it’s current form the forum is dedicated to Queen’s engineering students only. No further plans have been made at this point and time.</p><br>
+					<hr>
+					<h6>Search:</h6>
+					<input type="text" id="searchText"/>
+					<hr>
+
+					<!--<ul id = "list">
+						<li class="element"> PASTA </li>
+						<li class="element"> MACARONI </li>
+						<li class="element"> SPICY MEATBALLA </li>
+						<li class="element"> PIZZA </li>
+						<li class="element"> FETTUCHINI </li>
+					</ul>-->
 
 
-					<h4><font color = "purple">How do I ask a question?</font></h4>
+					<div><h4><font color = "purple">Who is this website available too?</font></h4>
+					<p>In it’s current form the forum is dedicated to Queen’s engineering students only. No further plans have been made at this point and time.</p><br></div>
+
+
+					<div><h4><font color = "purple">How do I ask a question?</font></h4>
 					<p>One you have accessed our website you should be prompted with either login page on the main search page, the difference should be noticeable. Once you are logged in you will be greeted with our main landing page. Here you will find the main search bar that encompasses a large portion of the page. Click on the search bar and type in your question to ask your question.</p>
-					<p>You can refine your search by selecting options such as tags, relevance, and submission date. One you are happy with your question simply click the search button or press the enter key.</p><br>
+					<p>You can refine your search by selecting options such as tags, relevance, and submission date. One you are happy with your question simply click the search button or press the enter key.</p><br></div>
 
 
-					<h4><font color = "purple">What are tags?</font></h4>
-					<p>Tags are classifiers attached to post and pages that assign what subject that question is relate to. So, for example if you were to ask or search for a question related to physics - 111. That question should be tagged with a tag labeled “APSC-111”. These tags assist in both organising and structuring the post and search of questions.</p><br>
-
-					<h4><font color = "purple">How to I post a question?</font></h4>
-					<p>To ask or post or ask a question you must …</p><br>
+					<div><h4><font color = "purple">What are tags?</font></h4>
+					<p>Tags are classifiers attached to post and pages that assign what subject that question is relate to. So, for example if you were to ask or search for a question related to physics - 111. That question should be tagged with a tag labeled “APSC-111”. These tags assist in both organising and structuring the post and search of questions.</p><br></div>
 
 
-					<h4><font color = "purple">Do other people know who I am based on my username?</font></h4>
-					<p>No who you are is completely confidential. Your username is randomly generated; there is no way of other people knowing your identity unless you tell them.</p><br>
+					<div><h4><font color = "purple">How to I post a question?</font></h4>
+					<p>To ask or post or ask a question you must …</p><br></div>
 
 
-					<h4><font color = "purple">How do I answer posts?</font></h4>
-					<p>Post can be answered by viewing posts and clicking on them. Once you on the question page there should be a button below the question. Pressing this button will open a penel which will allow you to comment.</p><br>
+					<div><h4><font color = "purple">Do other people know who I am based on my username?</font></h4>
+					<p>No who you are is completely confidential. Your username is randomly generated; there is no way of other people knowing your identity unless you tell them.</p><br></div>
 
 
-					<h4><font color = "purple">What are these numbers I see next to posts?</font></h4>
-					<p>The number next to posts and comments indicate “upvotes” these upvotes are there to indicate the quality of a post or question. A bigger number indicates that more people upvoted these comments, thus also indicating how good the question is, or how well the answer to the question is. To upvote the comment / post yourself simply click the arrow next to the number. If you see a negative number this indicates that the question was of poor quality, or the answer was unrelated / unhelpful. More upvoted posts will be shown closer to the top of the page, to allow for greater visibility.</p><br>
+					<div><h4><font color = "purple">How do I answer posts?</font></h4>
+					<p>Post can be answered by viewing posts and clicking on them. Once you on the question page there should be a button below the question. Pressing this button will open a penel which will allow you to comment.</p><br></div>
 
 
-					<h4><font color = "purple">What are the buttons below comments used for?</font></h4>
+					<div><h4><font color = "purple">What are these numbers I see next to posts?</font></h4>
+					<p>The number next to posts and comments indicate “upvotes” these upvotes are there to indicate the quality of a post or question. A bigger number indicates that more people upvoted these comments, thus also indicating how good the question is, or how well the answer to the question is. To upvote the comment / post yourself simply click the arrow next to the number. If you see a negative number this indicates that the question was of poor quality, or the answer was unrelated / unhelpful. More upvoted posts will be shown closer to the top of the page, to allow for greater visibility.</p><br></div>
+
+
+					<div><h4><font color = "purple">What are the buttons below comments used for?</font></h4>
 					<p>The buttons bellow posts and comments are used exactly as their labels suggest.
-						Reply allows a user to respond to a comment with their own question.
-						Report allows a user to report the question if the post / comment is  hurtful / condescending or violating.
-						Save allows a user to save a post for later. This allows for easy access to the question at a later time.
-						Edit – this only appears to peoples own comments or posts. This allows them to edit a post or comment after they have posted them; to either clear up their question or fix grammatical errors.</p><br>
+					Reply allows a user to respond to a comment with their own question.
+					Report allows a user to report the question if the post / comment is  hurtful / condescending or violating.
+					Save allows a user to save a post for later. This allows for easy access to the question at a later time.
+					Edit – this only appears to peoples own comments or posts. This allows them to edit a post or comment after they have posted them; to either clear up their question or fix grammatical errors.</p><br></div>
 
+						<script type="text/javascript">
+							function contains(text_one, text_two){
+								if(text_one.indexOf(text_two) != -1)
+									return true;	
+							}
+
+							$("#searchText").keyup(function(){
+								var searchText = $("#searchText").val().toLowerCase()
+								$("h4").each(function(){
+									if(!contains($(this).text().toLowerCase(), searchText))
+										$(this).closest("div").hide()
+									else
+										$(this).closest("div").show()
+								})
+							})
+
+						</script>
 
 
 					</div>

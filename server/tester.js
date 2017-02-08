@@ -5,8 +5,9 @@
  ** unless of course you want to know what I'm up to
 **/
 var dbr = require('./util/DBRow');
+var lit = require('./util/Literals.js');
 
-var r = new dbr.DBRow('vote');
+var r = new dbr.DBRow(lit.VOTE_TABLE);
 r.delete('26352735fehr').then(function(res){
 	console.log(res);
-})
+});

@@ -1,18 +1,19 @@
 "use strict";
 
 var dbr = require('./DBRow');
-var log = require('./log')
+var log = require('./log');
+var lit = require('./Literals.js');
 
 exports.collectPost = function(id, currentUserID) {
 	return new Promise(function(resolve, reject) {
 		var collection = {};
-		var post = new dbr.DBRow('post');
+		var post = new dbr.DBRow(lit.POST_TABLE);
 
 		post.get(id).then(function(res) {
-			collection["post"] = post.getRowJSON();
-			var comments = new dbr.DBRow('comment');
-			comments.addQuery('parentPost', id);
-			comments.orderBy('upvotes');
+			collection[lit.POST_TABLE] = post.getRowJSON();
+			var comments = new dbr.DBRow(lit.COMMENT_TABLE);
+			comments.addQuery(lit.FIELD_PARENT_POST, id);
+			comments.orderBy(lit.FIELD_UPVOTES);
 			comments.limit(20); // tweak for performance
 
 			comments.query().then(function(res) {
@@ -37,51 +38,52 @@ exports.collectPost = function(id, currentUserID) {
 			log.log("Failed to retrieve post related to id: " + id);
 			reject(false);
 		})
-	})	
+	})
 }
 
 exports.collectCommentList = function(userId) {
-	return new Promise(function(resolve, reject) {
-		var collection = {};
-		var comments = new dbr.DBRow('comment');
-		comments.addQuery('userID', userId);
-		comments.orderBy('timestamp', 'DESC');
-		comments.query(res).then(function(res) {
-			var i = 0;
+    return new Promise(function (resolve, reject) {
+        var collection = {};
+        var comments = new dbr.DBRow(lit.COMMENT_TABLE);
+        comments.addQuery(lit.FIELD_USER_ID, userId);
+        comments.orderBy(lit.FIELD_TIMESTAMP, lit.DESC);
+        comments.query(res).then(function (res) {
+            var i = 0;
 
-			while (comments.next()){
-				createCommentListElement(comments.getRowJSON(), currentUserID).then(function(res) {
-					collection.i = res;
-					i++;
-					if (i > comments.length())
-						resolve(collection);
-					
-				}, function(res) {
-					log.log("Failed to retrieve post related to id: " + id);
-					reject(false);
-				})
-			}
-			
-		}, function(res) {
-			reject(false);
-		})
+            while (comments.next()) {
+                createCommentListElement(comments.getRowJSON(), currentUserID).then(function (res) {
+                    collection.i = res;
+                    i++;
+                    if (i > comments.length())
+                        resolve(collection);
+
+                }, function (res) {
+                    log.log("Failed to retrieve post related to id: " + id);
+                    reject(false);
+                })
+            }
+
+        }, function (res) {
+            reject(false);
+        })
+    });
 }
 
 function extractCommentInfo(comment, currentUserID) {
 	return new Promise(function(resolve, reject) {
 		var info = {};
-		var voted = new dbr.DBRow('vote');
-		voted.addQuery('commentOrPostID', comment.getValue("id"));
-		voted.addQuery('userID', currentUserID);
+		var voted = new dbr.DBRow(lit.VOTE_TABLE);
+		voted.addQuery(lit.FIELD_COMMENT_OR_POST_ID, comment.getValue(lit.FIELD_ID));
+		voted.addQuery(lit.FIELD_USER_ID, currentUserID);
 		voted.query().then(function(res) {
 			info.vote = voted.getValue(voteValue);
-			info.content = comment.getValue('content');
-			info.votes = comment.getValue('netVotes');
-			info.isSolution = comment.getValue('isSolution');
-			info.parentComment = comment.getValue('parentComment');
-			info.timestamp = comment.getValue('timestamp');
-			info.commentLevel = comment.getValue('commentLevel');
-			info.author = comment.getValue('author');
+			info.content = comment.getValue(lit.FIELD_CONTENT);
+			info.votes = comment.getValue(lit.FIELD_NETVOTES);
+			info.isSolution = comment.getValue(lit.FIELD_IS_SOLUTION);
+			info.parentComment = comment.getValue(lit.FIELD_PARENT_COMMENT);
+			info.timestamp = comment.getValue(lit.FIELD_TIMESTAMP);
+			info.commentLevel = comment.getValue(lit.FIELD_COMMENT_LEVEL);
+			info.author = comment.getValue(lit.FIELD_AUTHOR);
 			resolve(info)
 		}, function(res) {
 			reject(false);
@@ -92,16 +94,16 @@ function extractCommentInfo(comment, currentUserID) {
 function createCommentListElement(comment, currentUserID) {
 	return new Promise(function(resolve, reject) {
 		var element = {};
-		var voted = new dbr.DBRow('vote');
-		voted.addQuery('commentOrPostID', comment.getValue("id"));
-		voted.addQuery('userID', currentUserID);
+		var voted = new dbr.DBRow(lit.VOTE_TABLE);
+		voted.addQuery(lit.FIELD_COMMENT_OR_POST_ID, comment.getValue(lit.FIELD_ID));
+		voted.addQuery(lit.FIELD_USER_ID, currentUserID);
 		voted.query().then(function(res) {
 			element.vote = voted.getValue(voteValue);
-			element.content = comment.getValue('content');
-			element.votes = comment.getValue('netVotes');
-			element.isSolution = comment.getValue('isSolution');
-			element.parentPost = comment.getValue('parentPost');
-			element.timestamp = comment.getValue('timestamp');
+			element.content = comment.getValue(lit.FIELD_CONTENT);
+			element.votes = comment.getValue(lit.FIELD_NETVOTES);
+			element.isSolution = comment.getValue(lit.FIELD_IS_SOLUTION);
+			element.parentPost = comment.getValue(lit.FIELD_PARENT_POST);
+			element.timestamp = comment.getValue(lit.FIELD_TIMESTAMP);
 			resolve(element)
 		}, function(res) {
 			reject(false);

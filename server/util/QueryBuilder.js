@@ -2,12 +2,13 @@
 
 var mysql = require('mysql');
 var log = require('./log');
-var escaper = require('./QueryEscaper')
+var escaper = require('./QueryEscaper');
+var lit = require('./Literals.js');
 
 const allowedOperators = ["like", "<=", ">=", ">", "<", "=", "!=", "<>"] //TODO: implement 'in' and 'between' operators
 
 exports.update = function(table, dbObject) {
-	if (!dbObject["id"])
+	if (!dbObject[lit.FIELD_ID])
 		return log.warn("The field 'id' must be set in order to update a row");
 
 	if (!escaper.isValidTableName(table))
@@ -15,11 +16,11 @@ exports.update = function(table, dbObject) {
 
 	var base = "UPDATE " + table + " SET ";
 	var dboBrokenDown = breakdownDBObject(dbObject, false, false, false, true, false, table);
-	return base + dboBrokenDown + " WHERE id=" + exports.escapeID(dbObject["id"]) + ";";
-}
+	return base + dboBrokenDown + " WHERE id=" + exports.escapeID(dbObject[lit.FIELD_ID]) + ";";
+};
 
 exports.insert = function(table, dbObject) {
-	if (!dbObject['id'])
+	if (!dbObject[lit.FIELD_ID])
 		return log.warn("The field 'id' must be set in order to insert a row");
 
 	if (!escaper.isValidTableName(table))
@@ -32,14 +33,14 @@ exports.insert = function(table, dbObject) {
 		return undefined;
 
 	return base + dboBrokenDown[0] + " VALUES " + dboBrokenDown[1] + ";";
-}
+};
 
 exports.get = function(table, rowId) {
 	if (!escaper.isValidTableName(table))
 		return log.warn("Invalid table name used for call to GET");
 
 	return "SELECT * FROM " + table + " WHERE id=" + mysql.escape(rowId) + ";";
-}
+};
 
 exports.query = function(table, dbObject) {
 	if (!escaper.isValidTableName(table))
@@ -49,7 +50,7 @@ exports.query = function(table, dbObject) {
 	var dboBrokenDown = breakdownDBObject(dbObject, false, true, true, false, true, table);
 	return base + dboBrokenDown;
 	
-}
+};
 
 // This is the only way we will allow a record to be deleted (by id)
 exports.delete = function(table, id) {
@@ -57,11 +58,11 @@ exports.delete = function(table, id) {
 		return log.warn("Invalid table name used for call to DELETE");
 
 	return "DELETE FROM " + table + " WHERE id=" + resolveObjectType(id) + ";";
-}
+};
 
 exports.escapeLimit = function(limitNum) {
 	return "LIMIT " + resolveObjectType(limitNum);
-}
+};
 
 exports.escapeOrderBy = function(field, ascOrDesc) {
 	return "ORDER BY " + field + " " + ascOrDesc;
@@ -69,7 +70,7 @@ exports.escapeOrderBy = function(field, ascOrDesc) {
 
 exports.escapeID = function(idToEscape) {
 	return mysql.escape(idToEscape);
-}
+};
 
 // if string, return a string of format "(field1='value1', field2='value2' ...)"
 // if true, return string of column ids and values where the indices are the same for each list
@@ -89,7 +90,7 @@ function breakdownDBObject(obj, returnAsTwoStrings, allowSettingId, parenthesis,
 	var itrs = 0;
 
 	if (!allowSettingId || addOne)
-		itrs = 1
+		itrs = 1;
 
 	if (returnAsTwoStrings){
 		for (var prop in obj) {
@@ -123,8 +124,8 @@ function breakdownDBObject(obj, returnAsTwoStrings, allowSettingId, parenthesis,
 			if (!allowSettingId && prop == 'id') 
 				continue;
 
-			if (typeof obj[prop] == 'object' && obj[prop]['operator'])
-				dbObjectString += prop + " " + checkOperator(obj[prop]['operator']) + " " + resolveObjectType(obj[prop]['value']);
+			if (typeof obj[prop] == 'object' && obj[prop][lit.OPERATOR])
+				dbObjectString += prop + " " + checkOperator(obj[prop][lit.OPERATOR]) + " " + resolveObjectType(obj[prop][lit.VALUE]);
 			else
 				dbObjectString += prop + "=" + resolveObjectType(obj[prop]);
 
@@ -147,23 +148,23 @@ function breakdownDBObject(obj, returnAsTwoStrings, allowSettingId, parenthesis,
 
 function resolveObjectType(resolveThis) {
 	var objectType = typeof resolveThis;
-	if (objectType == 'undefined' || objectType == 'symbol' || objectType == 'function' || objectType == 'object')
+	if (objectType == lit.UNDEFINED || objectType == lit.SYMBOL || objectType == lit.FUNCTION || objectType == lit.OBJECT)
 		return log.warn("Objects with type '" + objectType + "' are not currently implemented, please pass a number, boolean or string");
 
-	if (objectType == "number")
+	if (objectType == lit.NUMBER)
 		return resolveThis.toString();
 
 	if (!isNaN(resolveThis))
 		return resolveThis;
 
-	if (objectType == "boolean" || resolveThis === "true" || resolveThis === "false") {
-		if (resolveThis === true || resolveThis == "true")
-			return "1";
+	if (objectType == lit.BOOLEAN || resolveThis === lit.TRUE || resolveThis === lit.FALSE) {
+		if (resolveThis === true || resolveThis == lit.TRUE)
+			return lit.ONE;
 		else
-			return "0";
+			return lit.ZERO;
 	}
 
-	if (objectType == "string"){
+	if (objectType == lit.STRING){
 		return mysql.escape(resolveThis);
 	}
 }
@@ -172,7 +173,7 @@ function checkOperator(op) {
 	if (allowedOperators.includes(op.toLowerCase()))
 		return op.toUpperCase();
 	else {
-		if (op.toLowerCase() == 'in' || op.toLowerCase() == 'between')
+		if (op.toLowerCase() == lit.IN || op.toLowerCase() == lit.BETWEEN)
 			log.warn('The operator "' + op + '" has not yet been implemented... \n Using "=" instead.');
 		else
 			log.warn('An unacceptable operator was passed into the query, replacing with the equals operator');
